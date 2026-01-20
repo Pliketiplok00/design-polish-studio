@@ -1,0 +1,344 @@
+/**
+ * Click & Fix Detail Screen
+ *
+ * Phase 6: View submitted Click & Fix with status, photos, and replies.
+ *
+ * Shows:
+ * - Subject + description (original)
+ * - Location coordinates
+ * - Current status label
+ * - Photos (if any)
+ * - Replies list (chronological)
+ *
+ * Skin-pure: Uses skin tokens and Icon primitive (no hardcoded hex, no text glyphs).
+ */
+
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  RefreshControl,
+  Image,
+  TouchableOpacity,
+  Modal,
+  Dimensions,
+  Platform,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRoute } from '@react-navigation/native';
+import type { RouteProp } from '@react-navigation/native';
+import { GlobalHeader } from '../../components/GlobalHeader';
+import { useTranslations } from '../../i18n';
+import { clickFixApi, getFullApiUrl } from '../../services/api';
+import type { ClickFixDetailResponse } from '../../types/click-fix';
+import type { MainStackParamList } from '../../navigation/types';
+import { skin } from '../../ui/skin';
+import { STATUS_COLORS } from '../../ui/utils/statusColors';
+import { Icon } from '../../ui/Icon';
+import { H2, Body, Label, Meta, ButtonText } from '../../ui/Text';
+import { LoadingState, ErrorState } from '../../ui/States';
+import { formatDateTimeCroatian } from '../../utils/dateFormat';
+
+type DetailRouteProp = RouteProp<MainStackParamList, 'ClickFixDetail'>;
+
+const { width: screenWidth } = Dimensions.get('window');
+
+export function ClickFixDetailScreen(): React.JSX.Element {
+  const route = useRoute<DetailRouteProp>();
+  const { t } = useTranslations();
+  const { clickFixId } = route.params;
+
+  const [clickFix, setClickFix] = useState<ClickFixDetailResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
+
+  const fetchClickFix = useCallback(async () => {
+    setError(null);
+    try {
+      const data = await clickFixApi.getDetail(clickFixId);
+      setClickFix(data);
+    } catch (err) {
+      console.error('[ClickFixDetail] Error fetching:', err);
+      setError(t('clickFix.detail.error'));
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, [clickFixId]);
+
+  useEffect(() => {
+    void fetchClickFix();
+  }, [fetchClickFix]);
+
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    void fetchClickFix();
+  }, [fetchClickFix]);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <GlobalHeader type="child" />
+        <LoadingState message={t('common.loading')} />
+      </SafeAreaView>
+    );
+  }
+
+  if (error || !clickFix) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <GlobalHeader type="child" />
+        <ErrorState message={error || t('clickFix.detail.notFound')} />
+      </SafeAreaView>
+    );
+  }
+
+  const statusColor = STATUS_COLORS[clickFix.status] || STATUS_COLORS.zaprimljeno;
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <GlobalHeader type="child" />
+
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
+      >
+        {/* Status Badge */}
+        <View
+          style={[styles.statusBadge, { backgroundColor: statusColor.bg }]}
+        >
+          <ButtonText style={[styles.statusText, { color: statusColor.text }]}>
+            {clickFix.status_label}
+          </ButtonText>
+        </View>
+
+        {/* Original Message */}
+        <View style={styles.messageCard}>
+          <H2 style={styles.subject}>{clickFix.subject}</H2>
+          <Meta style={styles.date}>{formatDateTimeCroatian(clickFix.created_at)}</Meta>
+          <Body style={styles.description}>{clickFix.description}</Body>
+
+          {/* Location */}
+          <View style={styles.locationSection}>
+            <ButtonText style={styles.locationLabel}>{t('clickFix.detail.location')}:</ButtonText>
+            <Body style={styles.locationText}>
+              {clickFix.location.lat.toFixed(6)}, {clickFix.location.lng.toFixed(6)}
+            </Body>
+          </View>
+        </View>
+
+        {/* Photos Section */}
+        {clickFix.photos.length > 0 && (
+          <View style={styles.photosSection}>
+            <H2 style={styles.sectionTitle}>{t('clickFix.detail.photos')} ({clickFix.photos.length})</H2>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.photosScroll}
+            >
+              {clickFix.photos.map((photo, index) => (
+                <TouchableOpacity
+                  key={photo.id}
+                  onPress={() => setSelectedPhotoIndex(index)}
+                  activeOpacity={0.8}
+                >
+                  <Image
+                    source={{ uri: getFullApiUrl(photo.url) }}
+                    style={styles.photoThumbnail}
+                    resizeMode="cover"
+                  />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {/* Replies Section */}
+        <View style={styles.repliesSection}>
+          <H2 style={styles.sectionTitle}>{t('clickFix.detail.replies')}</H2>
+
+          {clickFix.replies.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Body style={styles.emptyText}>
+                {t('clickFix.detail.noReplies')}
+              </Body>
+            </View>
+          ) : (
+            clickFix.replies.map((reply) => (
+              <View key={reply.id} style={styles.replyCard}>
+                <View style={styles.replyHeader}>
+                  <Label style={styles.replyLabel}>{t('clickFix.detail.reply')}</Label>
+                  <Meta style={styles.replyDate}>
+                    {formatDateTimeCroatian(reply.created_at)}
+                  </Meta>
+                </View>
+                <Body style={styles.replyBody}>{reply.body}</Body>
+              </View>
+            ))
+          )}
+        </View>
+      </ScrollView>
+
+      {/* Photo Modal */}
+      <Modal
+        visible={selectedPhotoIndex !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSelectedPhotoIndex(null)}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.modalCloseButton}
+            onPress={() => setSelectedPhotoIndex(null)}
+          >
+            <Icon name="close" size="md" colorToken="textPrimary" />
+          </TouchableOpacity>
+          {selectedPhotoIndex !== null && clickFix.photos[selectedPhotoIndex] && (
+            <Image
+              source={{ uri: getFullApiUrl(clickFix.photos[selectedPhotoIndex].url) }}
+              style={styles.modalImage}
+              resizeMode="contain"
+            />
+          )}
+        </View>
+      </Modal>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: skin.colors.background,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  content: {
+    padding: skin.spacing.lg,
+    paddingBottom: skin.spacing.xxxl,
+  },
+  statusBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: skin.spacing.lg,
+    paddingVertical: skin.spacing.sm,
+    borderRadius: skin.borders.radiusPill,
+    marginBottom: skin.spacing.lg,
+  },
+  statusText: {
+  },
+  messageCard: {
+    backgroundColor: skin.colors.backgroundSecondary,
+    borderRadius: skin.borders.radiusCard,
+    padding: skin.spacing.lg,
+    marginBottom: skin.spacing.xxl,
+  },
+  subject: {
+    marginBottom: skin.spacing.xs,
+  },
+  date: {
+    marginBottom: skin.spacing.lg,
+  },
+  description: {
+    color: skin.colors.textSecondary,
+    lineHeight: 24,
+    marginBottom: skin.spacing.lg,
+  },
+  locationSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: skin.spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: skin.colors.borderLight,
+  },
+  locationLabel: {
+    color: skin.colors.textMuted,
+    marginRight: skin.spacing.sm,
+  },
+  locationText: {
+    color: skin.colors.successText,
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+  },
+  photosSection: {
+    marginBottom: skin.spacing.xxl,
+  },
+  sectionTitle: {
+    marginBottom: skin.spacing.md,
+  },
+  photosScroll: {
+    gap: skin.spacing.md,
+  },
+  photoThumbnail: {
+    width: 120,
+    height: 120,
+    borderRadius: skin.borders.radiusCard,
+    borderWidth: skin.borders.widthThin,
+    borderColor: skin.colors.border,
+  },
+  repliesSection: {
+    flex: 1,
+  },
+  emptyState: {
+    padding: skin.spacing.xxl,
+    backgroundColor: skin.colors.backgroundSecondary,
+    borderRadius: skin.borders.radiusCard,
+    alignItems: 'center',
+  },
+  emptyText: {
+    color: skin.colors.textMuted,
+    textAlign: 'center',
+  },
+  replyCard: {
+    backgroundColor: skin.colors.background,
+    borderWidth: skin.borders.widthThin,
+    borderColor: skin.colors.border,
+    borderRadius: skin.borders.radiusCard,
+    padding: skin.spacing.lg,
+    marginBottom: skin.spacing.md,
+  },
+  replyHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: skin.spacing.sm,
+  },
+  replyLabel: {
+    textTransform: 'uppercase',
+  },
+  replyDate: {
+  },
+  replyBody: {
+    color: skin.colors.textSecondary,
+    lineHeight: 22,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: skin.colors.overlay,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalCloseButton: {
+    position: 'absolute',
+    top: 60,
+    right: 20,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: skin.colors.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  modalImage: {
+    width: screenWidth - 32,
+    height: screenWidth - 32,
+  },
+});
+
+export default ClickFixDetailScreen;
