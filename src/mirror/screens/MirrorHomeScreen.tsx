@@ -54,18 +54,6 @@ const MIRROR_LINKS: MirrorLink[] = [
     icon: 'settings',
     route: '/mirror/settings',
   },
-  {
-    title: 'Events Calendar',
-    description: 'Mirror of EventsScreen with calendar + event list',
-    icon: 'calendar',
-    route: '/mirror/events',
-  },
-  {
-    title: 'Transport Hub',
-    description: 'Mirror of TransportHubScreen with fixture banners',
-    icon: 'globe',
-    route: '/mirror/transport-hub',
-  },
 ];
 
 export function MirrorHomeScreen(): React.JSX.Element {
