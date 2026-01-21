@@ -5,15 +5,16 @@
  */
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { skin } from '../skin';
 import { Icon } from '../primitives/Icon';
 import { Button } from '../primitives/Button';
 import { H1, H2, Label, Body, Meta, ButtonText } from '../primitives/Text';
 import {
-  eventDetailFixture,
+  eventListFixture,
   eventDetailMinimalFixture,
   eventsLabels,
+  type Event,
 } from '../fixtures/events';
 
 function formatDateLocaleFull(dateStr: string): string {
@@ -34,15 +35,19 @@ function formatTimeHrHR(dateStr: string): string {
 }
 
 export function MirrorEventDetailScreen(): React.JSX.Element {
+  const { eventId } = useParams<{ eventId: string }>();
   const [useMinimal, setUseMinimal] = useState(false);
-  const event = useMinimal ? eventDetailMinimalFixture : eventDetailFixture;
+  
+  // Find event by ID or fall back to first fixture
+  const foundEvent: Event | undefined = eventListFixture.find((e) => e.id === eventId);
+  const event = useMinimal ? eventDetailMinimalFixture : (foundEvent || eventListFixture[0]);
   const [subscribed, setSubscribed] = useState(false);
 
   return (
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <Link to="/mirror" style={styles.backLink}>
+        <Link to="/mirror/events" style={styles.backLink}>
           <Icon name="chevron-left" size="sm" colorToken="textMuted" />
           <span>Back</span>
         </Link>

@@ -38,9 +38,9 @@ const MIRROR_LINKS: MirrorLink[] = [
   },
   {
     title: 'Event Detail',
-    description: 'Mirror of EventDetailScreen with info tiles + reminder toggle',
+    description: 'Mirror of EventDetailScreen with info tiles + reminder toggle (via Events)',
     icon: 'calendar',
-    route: '/mirror/event-detail',
+    route: '/mirror/events/event-001',
   },
   {
     title: 'Transport Hub',
@@ -56,9 +56,9 @@ const MIRROR_LINKS: MirrorLink[] = [
   },
   {
     title: 'Contact Detail',
-    description: 'Mirror of ContactDetailScreen with action rows',
+    description: 'Mirror of ContactDetailScreen with action rows (via Contacts)',
     icon: 'phone',
-    route: '/mirror/contact-detail',
+    route: '/mirror/contacts/municipality-vis',
   },
   {
     title: 'Info Hub',

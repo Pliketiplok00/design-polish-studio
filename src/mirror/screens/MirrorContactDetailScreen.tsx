@@ -4,15 +4,17 @@
  * Recreates MirrorContactDetailScreen with contact info sections.
  */
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useMemo } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { skin } from '../skin';
 import { Icon, type IconName } from '../primitives/Icon';
 import { Card } from '../primitives/Card';
 import { H1, H2, Label, Body, Meta, ButtonText } from '../primitives/Text';
 import {
   contactDetailFixtures,
+  contactsListFixtures,
   contactsLabels,
+  type Contact,
 } from '../fixtures/contacts';
 
 interface ActionRowProps {
@@ -49,15 +51,27 @@ function ActionRow({ icon, label, isEmergency = false, onClick }: ActionRowProps
 }
 
 export function MirrorContactDetailScreen(): React.JSX.Element {
+  const { contactId } = useParams<{ contactId: string }>();
   const [fixtureIndex, setFixtureIndex] = useState(0);
+  
+  // Find contact by ID from all fixtures, or use fixture switcher
+  const foundContact = useMemo((): Contact | null => {
+    if (!contactId) return null;
+    for (const fixture of contactsListFixtures) {
+      const match = fixture.contacts.find((c) => c.id === contactId);
+      if (match) return match;
+    }
+    return null;
+  }, [contactId]);
+  
   const currentFixture = contactDetailFixtures[fixtureIndex];
-  const contact = currentFixture.contact;
+  const contact = foundContact || currentFixture.contact;
 
   return (
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.mirrorHeader}>
-        <Link to="/mirror" style={styles.backLink}>
+        <Link to="/mirror/contacts" style={styles.backLink}>
           <Icon name="chevron-left" size="sm" colorToken="textMuted" />
           <span>Back</span>
         </Link>

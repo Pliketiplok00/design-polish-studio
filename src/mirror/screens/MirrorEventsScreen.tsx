@@ -5,7 +5,7 @@
  */
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { skin } from '../skin';
 import { Icon } from '../primitives/Icon';
 import { H1, H2, Label, Body, Meta, ButtonText } from '../primitives/Text';
@@ -112,9 +112,9 @@ function Calendar({ selectedDate, onSelectDate, eventDates }: CalendarProps): Re
   );
 }
 
-function EventItem({ event }: { event: Event }): React.JSX.Element {
+function EventItem({ event, onPress }: { event: Event; onPress: () => void }): React.JSX.Element {
   return (
-    <div style={styles.eventItemWrapper}>
+    <button style={styles.eventItemWrapper} onClick={onPress}>
       <div style={styles.eventItemShadow} />
       <div style={styles.eventItem}>
         <div style={styles.eventContent}>
@@ -132,11 +132,12 @@ function EventItem({ event }: { event: Event }): React.JSX.Element {
         </div>
         <Icon name="chevron-right" size="sm" colorToken="chevron" />
       </div>
-    </div>
+    </button>
   );
 }
 
 export function MirrorEventsScreen(): React.JSX.Element {
+  const navigate = useNavigate();
   const initialDate = new Date(eventListFixture[0]?.start_datetime || Date.now());
   const [selectedDate, setSelectedDate] = useState(initialDate);
 
@@ -194,7 +195,7 @@ export function MirrorEventsScreen(): React.JSX.Element {
           )}
 
           {eventsForDay.map((event) => (
-            <EventItem key={event.id} event={event} />
+            <EventItem key={event.id} event={event} onPress={() => navigate(`/mirror/events/${event.id}`)} />
           ))}
         </div>
       </div>
@@ -347,6 +348,12 @@ const styles: Record<string, React.CSSProperties> = {
   eventItemWrapper: {
     position: 'relative',
     marginBottom: skin.spacing.md,
+    width: '100%',
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    cursor: 'pointer',
+    textAlign: 'left',
   },
   eventItemShadow: {
     position: 'absolute',
