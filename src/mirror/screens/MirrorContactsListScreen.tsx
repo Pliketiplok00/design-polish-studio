@@ -5,7 +5,7 @@
  */
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { skin } from '../skin';
 import { Icon } from '../primitives/Icon';
 import { Card } from '../primitives/Card';
@@ -52,6 +52,7 @@ function ContactRow({ contact, onPress }: { contact: Contact; onPress: () => voi
 }
 
 export function MirrorContactsListScreen(): React.JSX.Element {
+  const navigate = useNavigate();
   const [fixtureIndex, setFixtureIndex] = useState(0);
   const currentFixture = contactsListFixtures[fixtureIndex];
 
@@ -114,7 +115,7 @@ export function MirrorContactsListScreen(): React.JSX.Element {
             </div>
             <div style={styles.contactsList}>
               {emergencyContacts.map((contact) => (
-                <ContactRow key={contact.id} contact={contact} onPress={() => {}} />
+                <ContactRow key={contact.id} contact={contact} onPress={() => navigate(`/mirror/contacts/${contact.id}`)} />
               ))}
             </div>
           </div>
@@ -126,7 +127,7 @@ export function MirrorContactsListScreen(): React.JSX.Element {
             <H2 style={styles.sectionTitle}>{contactsLabels.allContactsHr}</H2>
             <div style={styles.contactsList}>
               {otherContacts.map((contact) => (
-                <ContactRow key={contact.id} contact={contact} onPress={() => {}} />
+                <ContactRow key={contact.id} contact={contact} onPress={() => navigate(`/mirror/contacts/${contact.id}`)} />
               ))}
             </div>
           </div>

@@ -36,10 +36,10 @@ const App = () => (
           <Route path="/mirror/language" element={<MirrorLanguageSelectionScreen />} />
           <Route path="/mirror/settings" element={<MirrorSettingsScreen />} />
           <Route path="/mirror/events" element={<MirrorEventsScreen />} />
-          <Route path="/mirror/event-detail" element={<MirrorEventDetailScreen />} />
+          <Route path="/mirror/events/:eventId" element={<MirrorEventDetailScreen />} />
           <Route path="/mirror/transport" element={<MirrorTransportHubScreen />} />
           <Route path="/mirror/contacts" element={<MirrorContactsListScreen />} />
-          <Route path="/mirror/contact-detail" element={<MirrorContactDetailScreen />} />
+          <Route path="/mirror/contacts/:contactId" element={<MirrorContactDetailScreen />} />
           <Route path="/mirror/info" element={<MirrorInfoHubScreen />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
