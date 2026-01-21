@@ -11,6 +11,12 @@ import { MirrorFeedbackConfirmationScreen } from "./mirror/screens/MirrorFeedbac
 import { MirrorClickFixConfirmationScreen } from "./mirror/screens/MirrorClickFixConfirmationScreen";
 import { MirrorLanguageSelectionScreen } from "./mirror/screens/MirrorLanguageSelectionScreen";
 import { MirrorSettingsScreen } from "./mirror/screens/MirrorSettingsScreen";
+import { MirrorEventsScreen } from "./mirror/screens/MirrorEventsScreen";
+import { MirrorTransportHubScreen } from "./mirror/screens/MirrorTransportHubScreen";
+import { MirrorContactsListScreen } from "./mirror/screens/MirrorContactsListScreen";
+import { MirrorContactDetailScreen } from "./mirror/screens/MirrorContactDetailScreen";
+import { MirrorInfoHubScreen } from "./mirror/screens/MirrorInfoHubScreen";
+import { MirrorEventDetailScreen } from "./mirror/screens/MirrorEventDetailScreen";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +35,12 @@ const App = () => (
           <Route path="/mirror/clickfix-confirmation" element={<MirrorClickFixConfirmationScreen />} />
           <Route path="/mirror/language" element={<MirrorLanguageSelectionScreen />} />
           <Route path="/mirror/settings" element={<MirrorSettingsScreen />} />
+          <Route path="/mirror/events" element={<MirrorEventsScreen />} />
+          <Route path="/mirror/event-detail" element={<MirrorEventDetailScreen />} />
+          <Route path="/mirror/transport" element={<MirrorTransportHubScreen />} />
+          <Route path="/mirror/contacts" element={<MirrorContactsListScreen />} />
+          <Route path="/mirror/contact-detail" element={<MirrorContactDetailScreen />} />
+          <Route path="/mirror/info" element={<MirrorInfoHubScreen />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

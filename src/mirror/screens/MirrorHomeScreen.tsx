@@ -31,6 +31,42 @@ const MIRROR_LINKS: MirrorLink[] = [
     route: '/mirror/inbox',
   },
   {
+    title: 'Events Calendar',
+    description: 'Mirror of EventsScreen with calendar + event list',
+    icon: 'calendar',
+    route: '/mirror/events',
+  },
+  {
+    title: 'Event Detail',
+    description: 'Mirror of EventDetailScreen with info tiles + reminder toggle',
+    icon: 'calendar',
+    route: '/mirror/event-detail',
+  },
+  {
+    title: 'Transport Hub',
+    description: 'Mirror of TransportHubScreen with banners + transport tiles',
+    icon: 'bus',
+    route: '/mirror/transport',
+  },
+  {
+    title: 'Contacts List',
+    description: 'Mirror of ContactsListScreen with grouped contacts',
+    icon: 'phone',
+    route: '/mirror/contacts',
+  },
+  {
+    title: 'Contact Detail',
+    description: 'Mirror of ContactDetailScreen with action rows',
+    icon: 'phone',
+    route: '/mirror/contact-detail',
+  },
+  {
+    title: 'Info Hub',
+    description: 'Mirror of InfoHubScreen with categories + quick links',
+    icon: 'info',
+    route: '/mirror/info',
+  },
+  {
     title: 'Feedback Confirmation',
     description: 'Mirror of FeedbackConfirmationScreen',
     icon: 'check',

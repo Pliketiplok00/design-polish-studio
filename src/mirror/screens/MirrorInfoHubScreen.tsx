@@ -37,9 +37,9 @@ function CategoryTile({ category, onClick }: { category: InfoCategory; onClick: 
   );
 }
 
-function TileRow({ tile, onClick }: { tile: InfoTile; onClick: () => void }): React.JSX.Element {
+function TileRow({ tile, onPress }: { tile: InfoTile; onPress: () => void }): React.JSX.Element {
   return (
-    <Card onClick={onClick} style={styles.tileRow}>
+    <Card onPress={onPress} style={styles.tileRow}>
       <div style={styles.tileIconContainer}>
         <Icon name={tile.icon} size="md" colorToken="textPrimary" />
       </div>
@@ -112,7 +112,7 @@ export function MirrorInfoHubScreen(): React.JSX.Element {
             <H2 style={styles.sectionTitle}>{section.titleHr}</H2>
             <div style={styles.tilesContainer}>
               {section.tiles.map((tile) => (
-                <TileRow key={tile.id} tile={tile} onClick={() => {}} />
+                <TileRow key={tile.id} tile={tile} onPress={() => {}} />
               ))}
             </div>
           </div>
