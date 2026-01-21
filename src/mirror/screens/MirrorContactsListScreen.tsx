@@ -16,9 +16,9 @@ import {
   type Contact,
 } from '../fixtures/contacts';
 
-function ContactRow({ contact, onClick }: { contact: Contact; onClick: () => void }): React.JSX.Element {
+function ContactRow({ contact, onPress }: { contact: Contact; onPress: () => void }): React.JSX.Element {
   return (
-    <Card onClick={onClick} style={{
+    <Card onPress={onPress} style={{
       ...styles.contactRow,
       ...(contact.isEmergency ? styles.contactRowEmergency : {}),
     }}>
@@ -114,7 +114,7 @@ export function MirrorContactsListScreen(): React.JSX.Element {
             </div>
             <div style={styles.contactsList}>
               {emergencyContacts.map((contact) => (
-                <ContactRow key={contact.id} contact={contact} onClick={() => {}} />
+                <ContactRow key={contact.id} contact={contact} onPress={() => {}} />
               ))}
             </div>
           </div>
@@ -126,7 +126,7 @@ export function MirrorContactsListScreen(): React.JSX.Element {
             <H2 style={styles.sectionTitle}>{contactsLabels.allContactsHr}</H2>
             <div style={styles.contactsList}>
               {otherContacts.map((contact) => (
-                <ContactRow key={contact.id} contact={contact} onClick={() => {}} />
+                <ContactRow key={contact.id} contact={contact} onPress={() => {}} />
               ))}
             </div>
           </div>
