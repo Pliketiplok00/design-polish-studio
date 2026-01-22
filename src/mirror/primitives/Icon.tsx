@@ -102,6 +102,7 @@ const ICON_MAP: Record<IconName, LucideIcon> = {
   'clock': Clock,
   'map-pin': MapPin,
   'user': User,
+  'arrow-left': ArrowLeft,
 };
 
 interface IconProps {
