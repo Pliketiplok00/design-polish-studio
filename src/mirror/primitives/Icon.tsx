@@ -69,7 +69,8 @@ export type IconName =
   | 'check'
   | 'clock'
   | 'map-pin'
-  | 'user';
+  | 'user'
+  | 'arrow-left';
 
 const ICON_MAP: Record<IconName, LucideIcon> = {
   'menu': Menu,
