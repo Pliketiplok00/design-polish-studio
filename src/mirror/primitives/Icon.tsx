@@ -35,6 +35,7 @@ import {
   Clock,
   MapPin,
   User,
+  ArrowLeft,
   type LucideIcon,
 } from 'lucide-react';
 import { skin, type SkinColors, type IconSize } from '../skin';
