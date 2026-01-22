@@ -35,6 +35,7 @@ import {
   Clock,
   MapPin,
   User,
+  ArrowLeft,
   type LucideIcon,
 } from 'lucide-react';
 import { skin, type SkinColors, type IconSize } from '../skin';
@@ -68,7 +69,8 @@ export type IconName =
   | 'check'
   | 'clock'
   | 'map-pin'
-  | 'user';
+  | 'user'
+  | 'arrow-left';
 
 const ICON_MAP: Record<IconName, LucideIcon> = {
   'menu': Menu,
@@ -100,6 +102,7 @@ const ICON_MAP: Record<IconName, LucideIcon> = {
   'clock': Clock,
   'map-pin': MapPin,
   'user': User,
+  'arrow-left': ArrowLeft,
 };
 
 interface IconProps {
