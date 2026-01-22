@@ -17,6 +17,8 @@ import { MirrorContactsListScreen } from "./mirror/screens/MirrorContactsListScr
 import { MirrorContactDetailScreen } from "./mirror/screens/MirrorContactDetailScreen";
 import { MirrorInfoHubScreen } from "./mirror/screens/MirrorInfoHubScreen";
 import { MirrorEventDetailScreen } from "./mirror/screens/MirrorEventDetailScreen";
+import { MirrorRoadLineDetailScreen } from "./mirror/screens/MirrorRoadLineDetailScreen";
+import { MirrorSeaLineDetailScreen } from "./mirror/screens/MirrorSeaLineDetailScreen";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,8 @@ const App = () => (
           <Route path="/mirror/events" element={<MirrorEventsScreen />} />
           <Route path="/mirror/events/:eventId" element={<MirrorEventDetailScreen />} />
           <Route path="/mirror/transport" element={<MirrorTransportHubScreen />} />
+          <Route path="/mirror/transport/road" element={<MirrorRoadLineDetailScreen />} />
+          <Route path="/mirror/transport/sea" element={<MirrorSeaLineDetailScreen />} />
           <Route path="/mirror/contacts" element={<MirrorContactsListScreen />} />
           <Route path="/mirror/contacts/:contactId" element={<MirrorContactDetailScreen />} />
           <Route path="/mirror/info" element={<MirrorInfoHubScreen />} />
