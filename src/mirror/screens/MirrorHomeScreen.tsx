@@ -49,6 +49,18 @@ const MIRROR_LINKS: MirrorLink[] = [
     route: '/mirror/transport',
   },
   {
+    title: 'Road Line Detail',
+    description: 'Mirror of RoadLineDetailScreen with departures + contacts',
+    icon: 'bus',
+    route: '/mirror/transport/road',
+  },
+  {
+    title: 'Sea Line Detail',
+    description: 'Mirror of SeaLineDetailScreen with departures + contacts',
+    icon: 'ship',
+    route: '/mirror/transport/sea',
+  },
+  {
     title: 'Contacts List',
     description: 'Mirror of ContactsListScreen with grouped contacts',
     icon: 'phone',
